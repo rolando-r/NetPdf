@@ -58,10 +58,8 @@ public class PersonController : BaseApiController
 
             List<Person> listaDePersonas = personas.ToList();
 
-            int x = 0;
             foreach (var persona in personas)
             {
-                x++;
                 // Agrega las celdas de datos a la tabla
                 cell = new Cell().Add(new Paragraph(persona.Id.ToString()));
                 table.AddCell(cell);
