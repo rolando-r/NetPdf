@@ -16,9 +16,5 @@ public class PersonConfiguration : IEntityTypeConfiguration<Person>
         builder.Property(x => x.LastName)
         .HasMaxLength(200)
         .IsRequired();
-
-        builder.Property(x => x.Age)
-        .HasColumnType("date")
-        .IsRequired();
     }
 }

@@ -1,3 +1,4 @@
+using Application.Repository;
 using Application.UnitOfWork;
 using AspNetCoreRateLimit;
 using Domain.Interfaces;
@@ -59,5 +60,6 @@ public static class AddApplicationServiceExtension
                 );
             });
         }
+
      }
  

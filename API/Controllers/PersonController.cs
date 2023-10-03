@@ -1,8 +1,15 @@
+using System.IO;
+using System.Threading.Tasks;
+using Domain.Interfaces;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using API.Dtos;
 using AutoMapper;
 using Domain.Entities;
-using Domain.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+using Application.Repository;
 
 namespace API.Controllers;
 
@@ -19,6 +26,54 @@ public class PersonController : BaseApiController
     {
         var registros = await _unitOfWork.Persons.GetAll();
         return _mapper.Map<List<PersonDto>>(registros);
+    }
+
+    [HttpGet("Reporte")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<List<Person>> GetGenerarPdfPersonc()
+    {
+        string Path = "d:/Usuario/Downloads/reporte.pdf";
+
+
+            using var writer = new PdfWriter(Path);
+            using var pdf = new PdfDocument(writer);
+            var document = new Document(pdf);
+
+            // Añade el título al documento
+            document.Add(new Paragraph("Reporte de personas").SetFontSize(14));
+
+            // Crea la tabla y agrega las celdas de encabezado
+            Table table = new Table(3).UseAllAvailableWidth();
+            Cell cell = new Cell().Add(new Paragraph("Id"));
+            table.AddCell(cell);
+            cell = new Cell().Add(new Paragraph("Name"));
+            table.AddCell(cell);
+            cell = new Cell().Add(new Paragraph("Last Name"));
+            table.AddCell(cell);
+
+            var tarea = _unitOfWork.Persons.GetAll();
+
+            IEnumerable<Person> personas = await tarea;
+
+            List<Person> listaDePersonas = personas.ToList();
+
+            int x = 0;
+            foreach (var persona in personas)
+            {
+                x++;
+                // Agrega las celdas de datos a la tabla
+                cell = new Cell().Add(new Paragraph(persona.Id.ToString()));
+                table.AddCell(cell);
+                cell = new Cell().Add(new Paragraph(persona.Name));
+                table.AddCell(cell);
+                cell = new Cell().Add(new Paragraph(persona.LastName));
+                table.AddCell(cell);
+            }
+
+            // Agrega la tabla al documento
+            document.Add(table);
+            return listaDePersonas;
     }
 
     [HttpGet("{id}")]

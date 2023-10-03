@@ -1,4 +1,6 @@
 using System.Linq.Expressions;
+using System.Text;
+using System.Text.Json;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,15 +34,9 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await _context.Set<T>().ToListAsync();
     }
 
-   public async virtual Task<(int totalRegistros, IEnumerable<T> registros)> GetAllAsync(int pageIndex, int pageSize, string search)
+   public async virtual Task<IEnumerable<T>> GetAllAsync()
     {
-        var totalRegistros = await _context.Set<T>().CountAsync();
-        var registros = await _context.Set<T>()
-            .Skip((pageIndex -1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
-
-            return (totalRegistros, registros);
+        return await _context.Set<T>().ToListAsync();
     }
 
     public virtual async Task<T> GetById(int Id)
@@ -62,4 +58,5 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         _context.Set<T>().Update(Entity);
     } 
+
 }

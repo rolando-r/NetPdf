@@ -3,7 +3,7 @@ namespace Domain.Interfaces;
 
 public interface IUnitOfWork
 {
-    public IPerson Persons { get; }
+    public IPersonRepository Persons { get; }
 
     Task<int> SaveAsync();
 }

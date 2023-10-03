@@ -16,7 +16,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     {
         _context = context;
     }
-    public IPerson Persons
+    public IPersonRepository Persons
     {
         get
         {
